@@ -722,7 +722,8 @@
                         <option value="5">5 Questions</option>
                         <option value="10" selected>10 Questions</option>
                         <option value="20">20 Questions</option>
-                        <option value="30">All 30</option>
+                        <option value="30">30 Questions</option>
+                        <option value="60">All 60</option>
                     </select>
                 </div>
             </div>
@@ -789,21 +790,67 @@
 const LETTERS = ['A','B','C','D'];
 const diffSettings = { easy:15, hard:10, veryHard:7 };
 const questionBank = [
-    { question:"Seismic is described as a privacy-enabled blockchain for whom?", answers:["Gamers","Fintechs","NFT creators","DeFi traders"], correct:"Fintechs" },
-    { question:"What technology does Seismic use for privacy instead of ZK-proofs?", answers:["Mixnets","Trusted Execution Environments (TEEs)","Homomorphic encryption","Bulletproofs"], correct:"Trusted Execution Environments (TEEs)" },
-    { question:"In Seismic, nodes must run inside what to ensure privacy?", answers:["Public cloud","TEE (secure hardware enclave)","Off-chain servers","Browser extensions"], correct:"TEE (secure hardware enclave)" },
-    { question:"Seismic's execution client that extends Reth with privacy is called?", answers:["Seismic Geth","Seismic Reth","Seismic Erigon","Seismic Nethermind"], correct:"Seismic Reth" },
-    { question:"What does seismic-revm implement?", answers:["The Mercury Specification of a shielded EVM","Standard Ethereum VM","Solana runtime","Cosmos WASM"], correct:"The Mercury Specification of a shielded EVM" },
-    { question:"Seismic adds extra syntax to Solidity primarily to control what?", answers:["Gas limits","Privacy settings","Token minting","Validator selection"], correct:"Privacy settings" },
-    { question:"Brookwell, the first major app on Seismic, enables private what?", answers:["Meme launches","Financial transactions like rent and payroll","NFT drops","Gaming rewards"], correct:"Financial transactions like rent and payroll" },
-    { question:"What funding firm led Seismic's $10M round in late 2025?", answers:["Paradigm","a16z crypto","Binance Labs","Multicoin Capital"], correct:"a16z crypto" },
-    { question:"What is the core innovation in Seismic's EVM regarding memory?", answers:["Dual memory architecture with encrypted cloning","Single public memory","No memory at all","Compressed storage"], correct:"Dual memory architecture with encrypted cloning" },
-    { question:"Seismic's consensus client is named?", answers:["Seismic Summit","Seismic Beacon","Seismic Nimbus","Seismic Lodestar"], correct:"Seismic Summit" },
-    { question:"Seismic integrates deeply with what providers worldwide?", answers:["Gaming platforms","On-/off-ramps and card providers","Social media","Only DEXs"], correct:"On-/off-ramps and card providers" },
-    { question:"What repo contains Seismic's TEE stack?", answers:["seismic-revm","enclave","summit","seismic-client"], correct:"enclave" },
-    { question:"Seismic is a Layer what blockchain?", answers:["2","1","0","Sidechain"], correct:"1" },
-    { question:"Seismic's approach flips the default from transparency to what?", answers:["Speed","Privacy","Scalability","Centralization"], correct:"Privacy" },
-    { question:"The Seismic GitHub organization name is?", answers:["SeismicLabs","SeismicSystems","SeismicChain","MercuryEVM"], correct:"SeismicSystems" }
+    { question:"What is Seismic officially described as?", answers:["A high-performance gaming blockchain","A privacy-enabled Layer 1 blockchain for fintechs","A meme coin launchpad","A general-purpose Layer 2 scaling solution"], correct:"A privacy-enabled Layer 1 blockchain for fintechs" },
+    { question:"Seismic achieves native privacy using which primary technology?", answers:["Zero-knowledge proofs","Trusted Execution Environments (TEEs)","Mixers and tumblers","Optional encryption add-ons"], correct:"Trusted Execution Environments (TEEs)" },
+    { question:"Seismic is fully compatible with which virtual machine?", answers:["Solana Runtime","Ethereum Virtual Machine (EVM)","Cosmos WASM","Bitcoin Script"], correct:"Ethereum Virtual Machine (EVM)" },
+    { question:"In Seismic, privacy is enforced at what level by default?", answers:["Wallet-level opt-in","Protocol level (native to every transaction)","Off-chain relays only","User-configured per contract"], correct:"Protocol level (native to every transaction)" },
+    { question:"What specification does seismic-revm implement?", answers:["Standard Ethereum Yellow Paper EVM","Mercury Specification of a shielded virtual machine","Consensus rules only","Bridge and cross-chain logic"], correct:"Mercury Specification of a shielded virtual machine" },
+    { question:"Seismic extends which Ethereum execution client with privacy features?", answers:["Geth","Reth","Erigon","Nethermind"], correct:"Reth" },
+    { question:"What extra syntax does Seismic add to Solidity for privacy control?", answers:["vtype prefix","stype (suint, sint, sbool, etc.)","ptype keyword","ztype for zero-knowledge"], correct:"stype (suint, sint, sbool, etc.)" },
+    { question:"Brookwell enables private handling of which real-world payments?", answers:["NFT drops and collectibles","Salaries, rent, payroll, and everyday transfers","Meme token trading","Gaming leaderboards"], correct:"Salaries, rent, payroll, and everyday transfers" },
+    { question:"Which firm led Seismic's $10M funding round announced in late 2025?", answers:["Paradigm","a16z crypto","Binance Labs","Multicoin Capital"], correct:"a16z crypto" },
+    { question:"Seismic includes built-in support for which compliance features?", answers:["Only basic KYC uploads","Transaction screening, reporting, and investigations","No compliance tooling at all","Meme content filters"], correct:"Transaction screening, reporting, and investigations" },
+    { question:"Why is bridging private data ('secrets') particularly difficult on chains like Seismic?", answers:["It is too fast and cheap","It risks metadata leaks and is cryptographically complex","Fees are prohibitively high","No one needs private bridging"], correct:"It risks metadata leaks and is cryptographically complex" },
+    { question:"Seismic protects sensitive fintech data such as what from being publicly visible forever?", answers:["Only gas usage","Salaries, rent payments, loan amounts, balances","Validator signatures","Block timestamps"], correct:"Salaries, rent payments, loan amounts, balances" },
+    { question:"What is Seismic's consensus client called?", answers:["Seismic Beacon","Seismic Summit","Seismic Nimbus","Seismic Lodestar"], correct:"Seismic Summit" },
+    { question:"Can standard Solidity smart contracts deploy on Seismic without any changes?", answers:["Yes, privacy is optional and standard contracts work as-is","No, all contracts must use stype","No, contracts need ZK circuits","Yes, but only with special compiler flags"], correct:"Yes, privacy is optional and standard contracts work as-is" },
+    { question:"Seismic integrates deeply with which real-world providers?", answers:["Gaming storefronts","Global on-/off-ramps and card issuers","Social media APIs","Only decentralized exchanges"], correct:"Global on-/off-ramps and card issuers" },
+    { question:"Seismic enables confidential execution of which types of operations by default?", answers:["Only simple token transfers","Transfers, loans, swaps, stablecoin mint/burn","NFT metadata updates only","Gaming reward distributions"], correct:"Transfers, loans, swaps, stablecoin mint/burn" },
+    { question:"Which GitHub repository contains Seismic's shielded virtual machine implementation?", answers:["seismic-summit","seismic-revm","seismic-bridge","seismic-wallet"], correct:"seismic-revm" },
+    { question:"Seismic allows developers to escape the 'glass city' by making what the default state?", answers:["Full transparency","Native privacy","Maximum transaction speed","Lowest possible gas fees"], correct:"Native privacy" },
+    { question:"Which of the following are examples of shielded types introduced in Seismic?", answers:["Only shielded strings","suint, sint, sbool, shielded addresses","No new types exist","Public integers only"], correct:"suint, sint, sbool, shielded addresses" },
+    { question:"For privacy enforcement, Seismic nodes must run inside what environment?", answers:["Public cloud instances","Secure hardware enclaves (TEEs)","Browser-based sandboxes","Centralized cloud servers"], correct:"Secure hardware enclaves (TEEs)" },
+    { question:"What is the main advantage of TEEs over ZK-proofs in Seismic's design for fintech?", answers:["Better meme virality","Higher performance and easier selective disclosure","Lower hardware requirements","Complete anonymity without compliance"], correct:"Higher performance and easier selective disclosure" },
+    { question:"In Seismic, global state is:", answers:["Fully public like Ethereum","Encrypted and only visible inside the TEE","Stored off-chain","Compressed but transparent"], correct:"Encrypted and only visible inside the TEE" },
+    { question:"What does the 'dual memory' architecture in seismic-revm allow?", answers:["Public and encrypted memory regions side-by-side","Only public memory","Memory compression only","No memory at all"], correct:"Public and encrypted memory regions side-by-side" },
+    { question:"Specie is building what kind of product on Seismic?", answers:["Meme launcher","Modern neobanks with private multi-currency accounts and global trade rails","NFT marketplace","DEX aggregator"], correct:"Modern neobanks with private multi-currency accounts and global trade rails" },
+    { question:"Cred uses Seismic for private credit because privacy is described as:", answers:["Optional for frontier businesses","Non-negotiable for real-world financial operations","Unnecessary for lending","Handled by centralized databases"], correct:"Non-negotiable for real-world financial operations" },
+    { question:"Seismic's privacy model creates 'chain lock-in' primarily because:", answers:["Bridging secrets is hard and leaks metadata","Users prefer public chains","Fees are too high to leave","Transactions are too slow"], correct:"Bridging secrets is hard and leaks metadata" },
+    { question:"What open-source component provides Seismic's TEE stack and enclave logic?", answers:["seismic-revm","enclave","seismic-summit","seismic-client"], correct:"enclave" },
+    { question:"Developers familiar with which Ethereum tools will find Seismic onboarding straightforward?", answers:["Rust + Anchor","Solidity, Foundry, Viem, Hardhat","Move language","Bitcoin Script"], correct:"Solidity, Foundry, Viem, Hardhat" },
+    { question:"Seismic is a:", answers:["Layer 2 rollup","Layer 1 blockchain","Sidechain","Layer 0 protocol"], correct:"Layer 1 blockchain" },
+    { question:"Seismic raised funding from which additional participants besides a16z crypto?", answers:["Only retail investors","Polychain, Amber Group, dao5, LayerZero, TrueBridge","Solana Foundation","No other VCs"], correct:"Polychain, Amber Group, dao5, LayerZero, TrueBridge" },
+    { question:"What is 'encrypted cloning' in Seismic's VM?", answers:["Cloning encrypted state between execution regions","Copying public state to a private chain","Duplicating validators","Mirroring L1 to L2"], correct:"Cloning encrypted state between execution regions" },
+    { question:"Seismic Summit handles which part of the stack?", answers:["Shielded VM execution","Consensus and validator rotation","On-ramp integrations","Solidity compiler"], correct:"Consensus and validator rotation" },
+    { question:"Seismic uses rotating validator committees inside:", answers:["Public cloud servers","TEEs","Browser extensions","Off-chain relayers"], correct:"TEEs" },
+    { question:"What allows selective disclosure in Seismic for regulators?", answers:["Public key exports","Built-in attestation and reporting hooks","Third-party auditors only","Disabling privacy temporarily"], correct:"Built-in attestation and reporting hooks" },
+    { question:"Brookwell's payroll feature on Seismic keeps salary data:", answers:["Fully public on-chain","Private from public view","Visible to all validators","Stored off-chain only"], correct:"Private from public view" },
+    { question:"Which stype keyword represents a shielded unsigned integer in Seismic?", answers:["pint","suint","zint","vint"], correct:"suint" },
+    { question:"Which stype keyword represents a shielded boolean in Seismic?", answers:["pbool","sbool","zbool","privbool"], correct:"sbool" },
+    { question:"Specie's neobank vision includes private:", answers:["NFT minting","Cross-border stablecoin rails","Gaming reward rails","Public lending boards"], correct:"Cross-border stablecoin rails" },
+    { question:"Cred uses Seismic for private:", answers:["NFT credit scores","Under-collateralized credit scoring","Gaming credit","Public credit ratings"], correct:"Under-collateralized credit scoring" },
+    { question:"Seismic's GitHub has how many+ repos as of early 2026?", answers:["70+","5","20","100+"], correct:"70+" },
+    { question:"The seismic-starter repo helps developers with:", answers:["Validator staking","Local dev setup and examples","Token deployment only","Cross-chain bridging"], correct:"Local dev setup and examples" },
+    { question:"Seismic's Magnitude program rewards:", answers:["Only token holders","Consistency, art, content, and community contributions","Only developers","Only validators"], correct:"Consistency, art, content, and community contributions" },
+    { question:"Magnitude community levels go from:", answers:["Mag1 to Mag9+","Level 1 to 100","Bronze to Diamond","Tier A to Tier Z"], correct:"Mag1 to Mag9+" },
+    { question:"Public chains are called the 'glass city' because:", answers:["They are visually beautiful","All data is permanently transparent","They are made of silica","They are fragile"], correct:"All data is permanently transparent" },
+    { question:"Seismic flips the default from transparency to:", answers:["Speed","Privacy","Decentralization","Scalability"], correct:"Privacy" },
+    { question:"Seismic's encrypted execution happens inside:", answers:["Public cloud VMs","TEEs on validator nodes","Browser wallets","Off-chain servers"], correct:"TEEs on validator nodes" },
+    { question:"The Seismic network verifies correct execution without seeing:", answers:["Gas costs","Private inputs and outputs","Block numbers","Validator addresses"], correct:"Private inputs and outputs" },
+    { question:"Seismic raised its seed round in what year?", answers:["2023","2024","2025","2026"], correct:"2025" },
+    { question:"Does Seismic support private stablecoin issuance and redemption?", answers:["Yes, natively","No, only public stablecoins","Only via bridges","Only via custodians"], correct:"Yes, natively" },
+    { question:"Private rent payments via Brookwell prevent:", answers:["Fast settlement","Public landlord/tenant balance exposure","Low fees","Multiple currencies"], correct:"Public landlord/tenant balance exposure" },
+    { question:"Which of the following is NOT a Seismic shielded type?", answers:["suint","sbool","sint","zfloat"], correct:"zfloat" },
+    { question:"What does 'stype' stand for in Seismic's extended Solidity syntax?", answers:["Standard type","Shielded type","Staking type","System type"], correct:"Shielded type" },
+    { question:"Via is building what type of product on Seismic?", answers:["Gaming platform","Cross-border payment and trade finance rails","NFT marketplace","Validator tooling"], correct:"Cross-border payment and trade finance rails" },
+    { question:"What is the primary reason fintech companies choose Seismic over public EVM chains?", answers:["Lower gas fees","Native privacy protecting sensitive financial data","Faster block times","Larger developer community"], correct:"Native privacy protecting sensitive financial data" },
+    { question:"In Seismic's architecture, which component handles shielded smart contract execution?", answers:["seismic-summit","seismic-revm","seismic-bridge","seismic-faucet"], correct:"seismic-revm" },
+    { question:"What programming language do developers use to write shielded contracts on Seismic?", answers:["Rust with TEE extensions","Extended Solidity with stype syntax","Move language","Vyper with ZK extensions"], correct:"Extended Solidity with stype syntax" },
+    { question:"Seismic's local development node is called:", answers:["seismic-testnet","sanvil","seismic-devnet","hardhat-seismic"], correct:"sanvil" },
+    { question:"What makes Seismic especially suitable for neobanks and fintech startups?", answers:["It has the most tokens","Privacy by default, compliance built-in, EVM-compatible","It is the cheapest chain","It has the fastest finality"], correct:"Privacy by default, compliance built-in, EVM-compatible" },
+    { question:"Which of these best describes Seismic's approach to compliance?", answers:["Ignore all regulations","Compliance is built directly into the protocol layer","Compliance is handled off-chain only","Compliance is optional per developer"], correct:"Compliance is built directly into the protocol layer" },
+    { question:"The seismic-reth client extends which Ethereum client codebase?", answers:["go-ethereum (geth)","reth (Rust Ethereum)","erigon","besu"], correct:"reth (Rust Ethereum)" },
+    { question:"What does Seismic's privacy model mean for on-chain financial data visibility?", answers:["All data is public and permanent","Sensitive data is encrypted and only accessible with permission","Data is deleted after 30 days","Data is stored off-chain entirely"], correct:"Sensitive data is encrypted and only accessible with permission" }
 ];
 
 let questions=[],currentIndex=0,score=0,streak=0,longestStreak=0,skippedCount=0,timerInterval=null;

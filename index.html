@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seismic Quiz | Privacy-First Blockchain</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet"/>
+
+    <style>
+        /* ═══════════════════════════════════════════════
+           SEISMIC BRAND KIT COLORS
+           Dawn Orange  #FF5C00  — Primary
+           Ember        #FF8C42  — Lighter orange
+           Dusk Purple  #4A1A6B  — Secondary
+           Violet       #7B3FA8  — Mid purple
+           Rose         #D8A7B1  — Accent / highlight
+           Cloud        #B57BEE  — Light purple
+           Slate        #0D0D1A  — Deep bg
+           Chalk        #F7F3EF  — Off-white text
+           Ash          #8A8A99  — Muted grey
+        ═══════════════════════════════════════════════ */
+        :root {
+            --dawn:       #FF5C00;
+            --ember:      #FF8C42;
+            --dawn-dim:   rgba(255,92,0,0.13);
+            --dawn-glow:  rgba(255,92,0,0.28);
+            --dusk:       #4A1A6B;
+            --violet:     #7B3FA8;
+            --dusk-dim:   rgba(74,26,107,0.35);
+            --rose:       #D8A7B1;
+            --rose-dim:   rgba(216,167,177,0.12);
+            --rose-glow:  rgba(216,167,177,0.22);
+            --sienna:     #A0522D;
+            --sienna-light: #C4743E;
+            --sienna-dim: rgba(160,82,45,0.14);
+            --sienna-glow:rgba(160,82,45,0.3);
+            --cloud:      #B57BEE;
+            --cloud-dim:  rgba(181,123,238,0.12);
+            --slate:      #0D0D1A;
+            --chalk:      #F7F3EF;
+            --ash:        #8A8A99;
+            --success:    #00DFA0;
+            --error:      #FF3355;
+            --card-bg:    rgba(13,13,26,0.80);
+            --border:     rgba(255,92,0,0.2);
+            --border-sub: rgba(255,255,255,0.07);
+        }
+
+        *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-image: url('1772274434311_image.png');
+            background-size: cover;
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-color: var(--slate);
+            color: var(--chalk);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(160deg,
+                rgba(13,13,26,0.65) 0%,
+                rgba(74,26,107,0.22) 40%,
+                rgba(216,167,177,0.08) 70%,
+                rgba(13,13,26,0.88) 100%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.88' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
+            filter: blur(80px);
+        }
+        .orb-orange {
+            width: 500px; height: 500px;
+            background: radial-gradient(circle, rgba(255,92,0,0.1) 0%, transparent 65%);
+            top: -120px; right: -100px;
+            animation: orbFloat 10s ease-in-out infinite alternate;
+        }
+        .orb-purple {
+            width: 420px; height: 420px;
+            background: radial-gradient(circle, rgba(74,26,107,0.22) 0%, transparent 65%);
+            bottom: -100px; left: -80px;
+            animation: orbFloat 12s ease-in-out infinite alternate-reverse;
+        }
+        .orb-sienna {
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(160,82,45,0.12) 0%, transparent 65%);
+            top: -80px; left: -80px;
+            animation: orbFloat 9s ease-in-out infinite alternate;
+        }
+            width: 360px; height: 360px;
+            background: radial-gradient(circle, rgba(216,167,177,0.1) 0%, transparent 65%);
+            top: 30%; right: -60px;
+            animation: orbFloat 11s ease-in-out infinite alternate;
+        }
+            width: 300px; height: 300px;
+            background: radial-gradient(circle, rgba(181,123,238,0.08) 0%, transparent 65%);
+            top: 40%; left: 5%;
+            animation: orbFloat 14s ease-in-out infinite alternate;
+        }
+        @keyframes orbFloat {
+            from { transform: translate(0,0); }
+            to   { transform: translate(25px, 15px); }
+        }
+
+        .app {
+            position: relative;
+            z-index: 10;
+            width: 92%;
+            max-width: 560px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 22px;
+            border: 1px solid var(--border);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            box-shadow:
+                0 0 0 1px rgba(255,255,255,0.04) inset,
+                0 40px 100px rgba(0,0,0,0.75),
+                0 0 80px var(--dawn-glow),
+                0 0 40px rgba(74,26,107,0.15);
+            overflow: hidden;
+            animation: cardIn 0.5s cubic-bezier(0.22,1,0.36,1) both;
+        }
+
+        #setup-screen.card {
+            background: rgba(160,82,45,0.1);
+            border-color: rgba(160,82,45,0.4);
+            box-shadow:
+                0 0 0 1px rgba(160,82,45,0.07) inset,
+                0 40px 100px rgba(0,0,0,0.75),
+                0 0 80px var(--sienna-glow),
+                0 0 40px rgba(160,82,45,0.18);
+        }
+
+        #setup-screen .card-inner::before {
+            background: linear-gradient(to right,
+                transparent,
+                var(--sienna) 20%,
+                var(--sienna-light) 50%,
+                var(--sienna) 80%,
+                transparent);
+            opacity: 0.85;
+        }
+
+        #quiz-screen.card {
+            background: rgba(216,167,177,0.1);
+            border-color: rgba(216,167,177,0.35);
+            box-shadow:
+                0 0 0 1px rgba(216,167,177,0.06) inset,
+                0 40px 100px rgba(0,0,0,0.75),
+                0 0 80px var(--rose-glow),
+                0 0 40px rgba(216,167,177,0.12);
+        }
+
+        .card-inner { padding: 40px 40px 36px; position: relative; }
+
+        .card-inner::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 30px; right: 30px;
+            height: 1px;
+            pointer-events: none;
+            background: linear-gradient(to right,
+                transparent,
+                var(--violet) 15%,
+                var(--rose) 40%,
+                var(--dawn) 60%,
+                var(--rose) 80%,
+                transparent);
+            opacity: 0.8;
+        }
+
+        #quiz-screen .card-inner::before {
+            background: linear-gradient(to right,
+                transparent,
+                var(--rose) 25%,
+                rgba(216,167,177,0.9) 50%,
+                var(--rose) 75%,
+                transparent);
+            opacity: 0.9;
+        }
+
+        /* ── SETUP ── */
+        .hidden { display: none !important; }
+
+        .setup-header { text-align: center; margin-bottom: 32px; }
+
+        .title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            letter-spacing: 0.05em;
+            line-height: 0.9;
+            background: linear-gradient(135deg, var(--chalk) 0%, var(--sienna-light) 35%, var(--sienna) 70%, #7a3d1e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 0.82rem;
+            color: var(--sienna-light);
+            line-height: 1.65;
+            font-weight: 300;
+            opacity: 0.85;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(160,82,45,0.3), rgba(196,116,62,0.4), rgba(160,82,45,0.3), transparent);
+            margin: 28px 0;
+        }
+
+        .fields-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .field { display: flex; flex-direction: column; gap: 7px; }
+
+        .field-label {
+            font-size: 0.6rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            color: var(--sienna-light);
+            font-weight: 600;
+        }
+
+        select {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            padding: 11px 36px 11px 14px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--border-sub);
+            border-radius: 10px;
+            color: var(--chalk);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 400;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.25s, background 0.25s, box-shadow 0.25s;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23FF5C00' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+
+        select:focus {
+            border-color: var(--sienna);
+            background-color: var(--sienna-dim);
+            box-shadow: 0 0 0 3px rgba(160,82,45,0.15);
+        }
+
+        select option { background: #141424; }
+
+        .btn-start {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--sienna-light) 0%, var(--sienna) 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-start::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.18) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 35px rgba(160,82,45,0.55), 0 0 0 1px rgba(196,116,62,0.4);
+        }
+
+        .btn-start:active { transform: translateY(0); }
+
+        /* ── QUIZ ── */
+        .quiz-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .q-label {
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--ash);
+            font-weight: 500;
+        }
+
+        .q-label strong {
+            color: var(--rose);
+            font-size: 0.9rem;
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 0.08em;
+        }
+
+        .timer-pill {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            padding: 6px 14px;
+            border-radius: 100px;
+            background: rgba(216,167,177,0.12);
+            border: 1px solid rgba(216,167,177,0.35);
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        .timer-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: var(--rose);
+            transition: background 0.3s;
+        }
+
+        #timer {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.15rem;
+            color: var(--rose);
+            letter-spacing: 0.05em;
+            line-height: 1;
+            min-width: 18px;
+            text-align: center;
+            transition: color 0.3s;
+        }
+
+        .timer-urgent .timer-pill {
+            background: rgba(255,51,85,0.12) !important;
+            border-color: rgba(255,51,85,0.35) !important;
+        }
+        .timer-urgent .timer-dot { background: var(--error) !important; }
+        .timer-urgent #timer { color: var(--error) !important; }
+
+        .progress-track {
+            height: 3px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 100px;
+            margin-bottom: 28px;
+            overflow: hidden;
+        }
+
+        #progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, rgba(216,167,177,0.5), var(--rose));
+            border-radius: 100px;
+            transition: width 0.55s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+        }
+
+        #progress-fill::after {
+            content: '';
+            position: absolute;
+            right: 0; top: -2px;
+            width: 8px; height: 7px;
+            border-radius: 50%;
+            background: var(--rose);
+            box-shadow: 0 0 8px var(--rose);
+        }
+
+        #question-text {
+            font-size: 1.12rem;
+            line-height: 1.55;
+            font-weight: 500;
+            margin-bottom: 20px;
+            min-height: 55px;
+            color: var(--rose);
+        }
+
+        .answers { display: grid; gap: 8px; }
+
+        .answer-btn {
+            position: relative;
+            padding: 13px 16px 13px 46px;
+            background: rgba(216,167,177,0.07);
+            border: 1px solid rgba(216,167,177,0.18);
+            border-radius: 11px;
+            color: var(--chalk);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.88rem;
+            font-weight: 400;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.18s ease;
+            opacity: 0;
+            animation: answerIn 0.3s ease forwards;
+        }
+
+        .answer-btn:nth-child(1) { animation-delay: 0.00s; }
+        .answer-btn:nth-child(2) { animation-delay: 0.05s; }
+        .answer-btn:nth-child(3) { animation-delay: 0.10s; }
+        .answer-btn:nth-child(4) { animation-delay: 0.15s; }
+
+        @keyframes answerIn {
+            from { opacity:0; transform: translateX(-8px); }
+            to   { opacity:1; transform: translateX(0); }
+        }
+
+        .answer-btn::before {
+            content: attr(data-letter);
+            position: absolute;
+            left: 13px; top: 50%;
+            transform: translateY(-50%);
+            width: 22px; height: 22px;
+            text-align: center;
+            line-height: 22px;
+            border-radius: 7px;
+            background: rgba(216,167,177,0.15);
+            border: 1px solid rgba(216,167,177,0.35);
+            font-size: 0.62rem;
+            font-weight: 700;
+            color: var(--rose);
+        }
+
+        .answer-btn:hover:not(:disabled) {
+            background: rgba(216,167,177,0.18);
+            border-color: rgba(216,167,177,0.6);
+            color: #fff;
+            transform: translateX(4px);
+        }
+
+        .answer-btn:hover:not(:disabled)::before {
+            background: rgba(216,167,177,0.3);
+            border-color: var(--rose);
+            color: #fff;
+        }
+
+        .answer-btn.correct {
+            background: rgba(0,223,160,0.1) !important;
+            border-color: var(--success) !important;
+            color: var(--success) !important;
+            font-weight: 500;
+            transform: none !important;
+        }
+
+        .answer-btn.wrong {
+            background: rgba(255,51,85,0.1) !important;
+            border-color: var(--error) !important;
+            color: var(--error) !important;
+            transform: none !important;
+        }
+
+        .answer-btn.skipped-reveal {
+            background: var(--rose-dim) !important;
+            border-color: var(--rose) !important;
+            color: var(--rose) !important;
+            transform: none !important;
+        }
+
+        .quiz-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(216,167,177,0.2);
+        }
+
+        .streak-badge {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--rose);
+            opacity: 0.75;
+        }
+
+        #streak-count {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            color: var(--dawn);
+            line-height: 1;
+            letter-spacing: 0.05em;
+        }
+
+        .streak-hot #streak-count {
+            color: var(--ember);
+            text-shadow: 0 0 12px rgba(255,140,66,0.6);
+        }
+
+        .btn-skip {
+            padding: 8px 18px;
+            background: rgba(216,167,177,0.08);
+            border: 1px solid rgba(216,167,177,0.3);
+            border-radius: 8px;
+            color: var(--rose);
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.68rem;
+            font-weight: 500;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-skip:hover:not(:disabled) {
+            border-color: var(--rose);
+            color: #fff;
+            background: rgba(216,167,177,0.22);
+        }
+
+        .btn-skip:disabled { opacity: 0.3; cursor: default; }
+
+        #result-screen.card {
+            background: rgba(160,82,45,0.1);
+            border-color: rgba(160,82,45,0.4);
+            box-shadow:
+                0 0 0 1px rgba(160,82,45,0.07) inset,
+                0 40px 100px rgba(0,0,0,0.75),
+                0 0 80px var(--sienna-glow),
+                0 0 40px rgba(160,82,45,0.18);
+        }
+
+        #result-screen .card-inner::before {
+            background: linear-gradient(to right,
+                transparent,
+                var(--sienna) 20%,
+                var(--sienna-light) 50%,
+                var(--sienna) 80%,
+                transparent);
+            opacity: 0.85;
+        }
+
+        .rank-pill {
+            display: inline-block;
+            padding: 7px 20px;
+            border-radius: 100px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            border: 1px solid currentColor;
+            margin-bottom: 16px;
+        }
+
+        .score-giant {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 6.5rem;
+            line-height: 0.88;
+            letter-spacing: 0.03em;
+            background: linear-gradient(135deg, var(--chalk) 0%, var(--sienna-light) 35%, var(--sienna) 70%, #7a3d1e 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .score-sub {
+            font-size: 0.68rem;
+            color: var(--sienna-light);
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            margin-top: 6px;
+            opacity: 0.85;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: rgba(0,0,0,0.32);
+            border: 1px solid var(--border-sub);
+            border-radius: 12px;
+            padding: 14px 8px;
+            text-align: center;
+        }
+
+        .stat-card:nth-child(1) {
+            background: var(--sienna-dim);
+            border-color: rgba(160,82,45,0.3);
+        }
+
+        .stat-card:nth-child(2) {
+            background: rgba(160,82,45,0.08);
+            border-color: rgba(196,116,62,0.25);
+        }
+
+        .stat-lbl {
+            font-size: 0.58rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--sienna-light);
+            opacity: 0.85;
+            margin-bottom: 5px;
+        }
+
+        .stat-val {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.7rem;
+            color: var(--sienna-light);
+            line-height: 1;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-card:nth-child(1) .stat-val { color: var(--sienna-light); }
+        .stat-card:nth-child(2) .stat-val { color: var(--sienna); }
+
+        .btn-retry {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, var(--sienna-light) 0%, var(--sienna) 100%);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-retry::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .btn-retry:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 35px rgba(160,82,45,0.55), 0 0 0 1px rgba(196,116,62,0.4);
+        }
+
+        @keyframes shake {
+            0%,100% { transform:translateX(0); }
+            20%      { transform:translateX(-8px); }
+            40%      { transform:translateX(8px); }
+            60%      { transform:translateX(-4px); }
+            80%      { transform:translateX(4px); }
+        }
+        .shake { animation: shake 0.35s ease; }
+
+        @media (max-width: 480px) {
+            .card-inner { padding: 28px 22px 24px; }
+            .title { font-size: 3.2rem; }
+            .fields-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="orb orb-orange"></div>
+<div class="orb orb-purple"></div>
+<div class="orb orb-cloud"></div>
+<div class="orb orb-rose"></div>
+<div class="orb orb-sienna"></div>
+
+<div class="app">
+
+    <div id="setup-screen" class="card">
+        <div class="card-inner">
+            <div class="setup-header">
+                <h1 class="title">Seismic<br>Quiz</h1>
+                <p class="subtitle">Validate your knowledge of privacy-first blockchain fintech.<br>Only the sharpest minds survive.</p>
+            </div>
+            <div class="divider"></div>
+            <div class="fields-row">
+                <div class="field">
+                    <label class="field-label">Difficulty</label>
+                    <select id="difficulty">
+                        <option value="easy">Easy — 15s</option>
+                        <option value="hard" selected>Hard — 10s</option>
+                        <option value="veryHard">Brutal — 7s</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label class="field-label">Questions</label>
+                    <select id="question-count">
+                        <option value="5">5 Questions</option>
+                        <option value="10" selected>10 Questions</option>
+                        <option value="20">20 Questions</option>
+                        <option value="30">All 30</option>
+                    </select>
+                </div>
+            </div>
+            <button id="start-btn" class="btn-start">Start Quiz →</button>
+        </div>
+    </div>
+
+    <div id="quiz-screen" class="card hidden">
+        <div class="card-inner">
+            <div class="quiz-topbar">
+                <div class="q-label">
+                    Q <strong id="q-num">01</strong>
+                    <span id="q-total" style="color:var(--ash)">/10</span>
+                </div>
+                <div id="timer-pill" class="timer-pill">
+                    <div class="timer-dot"></div>
+                    <span id="timer">10</span>
+                </div>
+            </div>
+            <div class="progress-track">
+                <div id="progress-fill"></div>
+            </div>
+            <p id="question-text">Initialising enclave...</p>
+            <div id="answers-container" class="answers"></div>
+            <div class="quiz-footer">
+                <div class="streak-badge" id="streak-badge">
+                    <span>🔥</span>
+                    <span>Streak</span>
+                    <span id="streak-count">0</span>
+                </div>
+                <button id="skip-btn" class="btn-skip">Skip</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="result-screen" class="card hidden">
+        <div class="card-inner">
+            <div class="result-header">
+                <div id="rank-pill" class="rank-pill">Calculating...</div>
+                <div class="score-giant" id="score-big">0</div>
+                <div class="score-sub">Correct Answers</div>
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-lbl">Accuracy</div>
+                    <div class="stat-val" id="accuracy">0%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-lbl">Best Streak</div>
+                    <div class="stat-val" id="longest-streak">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-lbl">Skipped</div>
+                    <div class="stat-val" id="total-skipped">0</div>
+                </div>
+            </div>
+            <button id="retry-btn" class="btn-retry">Play Again</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+const LETTERS = ['A','B','C','D'];
+const diffSettings = { easy:15, hard:10, veryHard:7 };
+const questionBank = [
+    { question:"Seismic is described as a privacy-enabled blockchain for whom?", answers:["Gamers","Fintechs","NFT creators","DeFi traders"], correct:"Fintechs" },
+    { question:"What technology does Seismic use for privacy instead of ZK-proofs?", answers:["Mixnets","Trusted Execution Environments (TEEs)","Homomorphic encryption","Bulletproofs"], correct:"Trusted Execution Environments (TEEs)" },
+    { question:"In Seismic, nodes must run inside what to ensure privacy?", answers:["Public cloud","TEE (secure hardware enclave)","Off-chain servers","Browser extensions"], correct:"TEE (secure hardware enclave)" },
+    { question:"Seismic's execution client that extends Reth with privacy is called?", answers:["Seismic Geth","Seismic Reth","Seismic Erigon","Seismic Nethermind"], correct:"Seismic Reth" },
+    { question:"What does seismic-revm implement?", answers:["The Mercury Specification of a shielded EVM","Standard Ethereum VM","Solana runtime","Cosmos WASM"], correct:"The Mercury Specification of a shielded EVM" },
+    { question:"Seismic adds extra syntax to Solidity primarily to control what?", answers:["Gas limits","Privacy settings","Token minting","Validator selection"], correct:"Privacy settings" },
+    { question:"Brookwell, the first major app on Seismic, enables private what?", answers:["Meme launches","Financial transactions like rent and payroll","NFT drops","Gaming rewards"], correct:"Financial transactions like rent and payroll" },
+    { question:"What funding firm led Seismic's $10M round in late 2025?", answers:["Paradigm","a16z crypto","Binance Labs","Multicoin Capital"], correct:"a16z crypto" },
+    { question:"What is the core innovation in Seismic's EVM regarding memory?", answers:["Dual memory architecture with encrypted cloning","Single public memory","No memory at all","Compressed storage"], correct:"Dual memory architecture with encrypted cloning" },
+    { question:"Seismic's consensus client is named?", answers:["Seismic Summit","Seismic Beacon","Seismic Nimbus","Seismic Lodestar"], correct:"Seismic Summit" },
+    { question:"Seismic integrates deeply with what providers worldwide?", answers:["Gaming platforms","On-/off-ramps and card providers","Social media","Only DEXs"], correct:"On-/off-ramps and card providers" },
+    { question:"What repo contains Seismic's TEE stack?", answers:["seismic-revm","enclave","summit","seismic-client"], correct:"enclave" },
+    { question:"Seismic is a Layer what blockchain?", answers:["2","1","0","Sidechain"], correct:"1" },
+    { question:"Seismic's approach flips the default from transparency to what?", answers:["Speed","Privacy","Scalability","Centralization"], correct:"Privacy" },
+    { question:"The Seismic GitHub organization name is?", answers:["SeismicLabs","SeismicSystems","SeismicChain","MercuryEVM"], correct:"SeismicSystems" }
+];
+
+let questions=[],currentIndex=0,score=0,streak=0,longestStreak=0,skippedCount=0,timerInterval=null;
+
+const setupScreen  = document.getElementById("setup-screen");
+const quizScreen   = document.getElementById("quiz-screen");
+const resultScreen = document.getElementById("result-screen");
+const answersEl    = document.getElementById("answers-container");
+const timerEl      = document.getElementById("timer");
+const timerPill    = document.getElementById("timer-pill");
+const progressFill = document.getElementById("progress-fill");
+const skipBtn      = document.getElementById("skip-btn");
+const streakBadge  = document.getElementById("streak-badge");
+
+const shuffle = arr => [...arr].sort(()=>Math.random()-0.5);
+
+document.getElementById("start-btn").onclick = () => {
+    const count = parseInt(document.getElementById("question-count").value);
+    questions = shuffle(questionBank).slice(0, count);
+    currentIndex=0; score=0; streak=0; longestStreak=0; skippedCount=0;
+    document.getElementById("q-total").textContent = `/${count}`;
+    setupScreen.classList.add("hidden");
+    resultScreen.classList.add("hidden");
+    quizScreen.classList.remove("hidden");
+    loadQuestion();
+};
+
+function loadQuestion() {
+    if (currentIndex >= questions.length) return endGame();
+    const q = questions[currentIndex];
+    const diff = document.getElementById("difficulty").value;
+    document.getElementById("question-text").textContent = q.question;
+    document.getElementById("q-num").textContent = String(currentIndex+1).padStart(2,'0');
+    progressFill.style.width = `${(currentIndex/questions.length)*100}%`;
+    timerPill.classList.remove("timer-urgent");
+    answersEl.innerHTML = "";
+    shuffle(q.answers).forEach((ans,i)=>{
+        const btn = document.createElement("button");
+        btn.className = "answer-btn";
+        btn.setAttribute("data-letter", LETTERS[i]);
+        btn.textContent = ans;
+        btn.onclick = ()=>checkAnswer(ans, q.correct);
+        answersEl.appendChild(btn);
+    });
+    skipBtn.disabled = false;
+    skipBtn.onclick = ()=>handleSkip(q.correct);
+    startTimer(diff);
+}
+
+function startTimer(diff) {
+    clearInterval(timerInterval);
+    let t = diffSettings[diff];
+    timerEl.textContent = t;
+    timerPill.classList.remove("timer-urgent");
+    timerInterval = setInterval(()=>{
+        t--;
+        timerEl.textContent = t;
+        if (t<=3) timerPill.classList.add("timer-urgent");
+        if (t<=0) handleWrong(null, questions[currentIndex].correct);
+    }, 1000);
+}
+
+function checkAnswer(sel, correct) {
+    clearInterval(timerInterval);
+    disableAll();
+    const btns = [...answersEl.children];
+    if (sel===correct) {
+        score++; streak++;
+        if (streak>longestStreak) longestStreak=streak;
+        document.getElementById("streak-count").textContent = streak;
+        streakBadge.classList.toggle("streak-hot", streak>=3);
+        btns.find(b=>b.textContent===correct).classList.add("correct");
+        setTimeout(next, 650);
+    } else {
+        handleWrong(sel, correct);
+    }
+}
+
+function handleSkip(correct) {
+    clearInterval(timerInterval);
+    disableAll();
+    skippedCount++; streak=0;
+    document.getElementById("streak-count").textContent = 0;
+    streakBadge.classList.remove("streak-hot");
+    const c = [...answersEl.children].find(b=>b.textContent===correct);
+    if (c) c.classList.add("skipped-reveal");
+    setTimeout(next, 900);
+}
+
+function handleWrong(sel, correct) {
+    clearInterval(timerInterval);
+    disableAll();
+    streak=0;
+    document.getElementById("streak-count").textContent = 0;
+    streakBadge.classList.remove("streak-hot");
+    quizScreen.classList.add("shake");
+    setTimeout(()=>quizScreen.classList.remove("shake"), 350);
+    const btns = [...answersEl.children];
+    if (sel) btns.find(b=>b.textContent===sel)?.classList.add("wrong");
+    btns.find(b=>b.textContent===correct)?.classList.add("correct");
+    setTimeout(next, 1300);
+}
+
+function disableAll() {
+    [...answersEl.children].forEach(b=>b.disabled=true);
+    skipBtn.disabled=true;
+}
+
+function next() { currentIndex++; loadQuestion(); }
+
+function endGame() {
+    quizScreen.classList.add("hidden");
+    resultScreen.classList.remove("hidden");
+    const total = questions.length;
+    const acc = Math.round((score/total)*100);
+    document.getElementById("score-big").textContent = score;
+    document.getElementById("accuracy").textContent = acc+"%";
+    document.getElementById("longest-streak").textContent = longestStreak;
+    document.getElementById("total-skipped").textContent = skippedCount;
+    const pill = document.getElementById("rank-pill");
+    if (acc>=90) {
+        pill.textContent="Privacy Architect";
+        pill.style.cssText="color:#C4743E;border-color:#C4743E;background:rgba(196,116,62,0.12)";
+    } else if (acc>=70) {
+        pill.textContent="Protocol Specialist";
+        pill.style.cssText="color:#A0522D;border-color:#A0522D;background:rgba(160,82,45,0.12)";
+    } else if (acc>=40) {
+        pill.textContent="Seismic Operator";
+        pill.style.cssText="color:#8B4513;border-color:#8B4513;background:rgba(139,69,19,0.12)";
+    } else {
+        pill.textContent="Seismic Rookie";
+        pill.style.cssText="color:#7a3d1e;border-color:#7a3d1e;background:rgba(122,61,30,0.12)";
+    }
+}
+
+document.getElementById("retry-btn").onclick = ()=>{
+    resultScreen.classList.add("hidden");
+    setupScreen.classList.remove("hidden");
+};
+</script>
+</body>
+</html>
